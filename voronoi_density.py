@@ -30,13 +30,13 @@ def ty_to_lat(ty, zoom=10):
 # dif_pcts = []
 # min_rel_stds = []
 
-k = 25
+k = 5
+n_empty_allowed = 1
 
 def get_score(centroids):
     cell = [closest_point(x, centroids) for x in df['coord']]
     cell_totals = df.groupby(cell)['count'].sum()
-    # Allow 1 emptier cell
-    second_smallest = cell_totals.nsmallest(2).iloc[-1]
+    second_smallest = cell_totals.nsmallest(1 + n_empty_allowed).iloc[-1]
     dif_pct = (cell_totals.max() - second_smallest) / cell_totals.min()
     score = -dif_pct # define score so that higher = better
     return score
